@@ -46,6 +46,7 @@ function AdminLoginContent() {
     if (result?.error) {
       setGeneralError('Pogrešan email ili lozinka');
     } else {
+      router.refresh();
       router.push('/');
     }
   };

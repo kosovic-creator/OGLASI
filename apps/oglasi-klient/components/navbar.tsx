@@ -1,10 +1,11 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@oglasi/auth';
+'use client';
+
+import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export async function Navbar() {
-  const session = await getServerSession(authOptions);
+export function Navbar() {
+    const { data: session } = useSession();
   const user = session?.user;
 
   return (
@@ -22,11 +23,13 @@ export async function Navbar() {
               <div className="text-sm text-gray-600">
                 {user.name || user.email}
               </div>
-              <form action="/api/auth/signout" method="POST">
-                <Button type="submit" variant="outline" size="sm">
-                  Odjava
-                </Button>
-              </form>
+                          <Button
+                              onClick={() => signOut({ callbackUrl: '/login' })}
+                              variant="outline"
+                              size="sm"
+                          >
+                              Odjava
+                          </Button>
             </>
           ) : (
             <Link href="/login">
