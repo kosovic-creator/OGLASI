@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+      "postinstall": "npm run db:generate --workspace=packages/database",
     "db:migrate": "npm run db:migrate --workspace=packages/database",
     "db:deploy": "npm run db:deploy --workspace=packages/database",
     "db:reset": "npm run db:reset --workspace=packages/database",
