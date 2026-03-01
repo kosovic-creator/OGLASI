@@ -21,6 +21,6 @@ export function formatPrice(price: number | string | any): string {
 
   return new Intl.NumberFormat('bs-BA', {
     style: 'currency',
-    currency: 'BAM',
+    currency: 'EUR',
   }).format(numPrice)
 }

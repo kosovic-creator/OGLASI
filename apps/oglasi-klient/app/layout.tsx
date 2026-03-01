@@ -6,6 +6,10 @@ import { Navbar } from '@/components/navbar';
 export const metadata: Metadata = {
   title: 'Oglasi Klient',
   description: 'Klijentska aplikacija za oglase',
+   icons: {
+    
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
