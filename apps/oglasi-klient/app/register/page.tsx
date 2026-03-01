@@ -8,6 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import {
+  mapZodErrorsToFields,
+  registerSchema,
+  resetValidationState,
+} from '@oglasi/auth/schemas';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,30 +21,26 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [generalError, setGeneralError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    resetValidationState(setErrors, setGeneralError);
     setLoading(true);
 
-    // Validacija
-    if (!email || !password || !confirmPassword) {
-      setError('Sva polja su obavezna');
-      setLoading(false);
-      return;
-    }
+    // Validacija sa Zod
+    const validationResult = registerSchema.safeParse({
+      email,
+      password,
+      confirmPassword,
+      name,
+    });
 
-    if (password !== confirmPassword) {
-      setError('Lozinke se ne poklapaju');
-      setLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Lozinka mora biti najmanje 6 karaktera');
+    if (!validationResult.success) {
+      setErrors(mapZodErrorsToFields(validationResult.error));
       setLoading(false);
       return;
     }
@@ -60,14 +61,14 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Greška pri registraciji');
+        setGeneralError(data.error || 'Greška pri registraciji');
         return;
       }
 
       // Uspešna registracija - preusmerite na login
       router.push('/login?registered=true');
     } catch (err) {
-      setError('Greška pri konekciji sa serverom');
+      setGeneralError('Greška pri konekciji sa serverom');
     } finally {
       setLoading(false);
     }
@@ -91,7 +92,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="space-y-4">
             <div>
               <Label htmlFor="name">Ime (opciono)</Label>
@@ -102,7 +103,11 @@ export default function RegisterPage() {
                 placeholder="Svoje ime"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className={errors.name ? 'border-red-500' : ''}
               />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              )}
             </div>
 
             <div>
@@ -110,12 +115,15 @@ export default function RegisterPage() {
               <Input
                 id="email"
                 name="email"
-                type="email"
-                required
+                type="text"
                 placeholder="Email adresa"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={errors.email ? 'border-red-500' : ''}
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
 
             <div>
@@ -124,11 +132,14 @@ export default function RegisterPage() {
                 id="password"
                 name="password"
                 type="password"
-                required
                 placeholder="Lozinka (min. 6 karaktera)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className={errors.password ? 'border-red-500' : ''}
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
 
             <div>
@@ -137,19 +148,22 @@ export default function RegisterPage() {
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
-                required
                 placeholder="Potvrdite lozinku"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                className={errors.confirmPassword ? 'border-red-500' : ''}
               />
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+              )}
             </div>
           </div>
 
-          {error && (
+          {generalError && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Greška</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{generalError}</AlertDescription>
             </Alert>
           )}
 

@@ -5,6 +5,8 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@oglasi/database';
 import bcrypt from 'bcryptjs';
 import type { UserRole } from '@oglasi/database';
+export { loginSchema, registerSchema, adminRegisterSchema } from './schemas';
+export type { LoginInput, RegisterInput, AdminRegisterInput } from './schemas';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -72,3 +74,5 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+export type { NextAuthOptions };

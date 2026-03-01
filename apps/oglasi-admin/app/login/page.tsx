@@ -10,18 +10,32 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import {
+  loginSchema,
+  mapZodErrorsToFields,
+  resetValidationState,
+} from '@oglasi/auth/schemas';
 
 function AdminLoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [generalError, setGeneralError] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
   const registered = searchParams.get('registered');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    resetValidationState(setErrors, setGeneralError);
+
+    // Validacija sa Zod
+    const validationResult = loginSchema.safeParse({ email, password });
+
+    if (!validationResult.success) {
+      setErrors(mapZodErrorsToFields(validationResult.error));
+      return;
+    }
 
     const result = await signIn('credentials', {
       email,
@@ -30,7 +44,7 @@ function AdminLoginContent() {
     });
 
     if (result?.error) {
-      setError('Pogrešan email ili lozinka');
+      setGeneralError('Pogrešan email ili lozinka');
     } else {
       router.push('/');
     }
@@ -67,19 +81,23 @@ function AdminLoginContent() {
             </AlertDescription>
           </Alert>
         )}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
           <div className="space-y-4">
             <div>
               <Label htmlFor="email">Email adresa</Label>
               <Input
                 id="email"
                 name="email"
-                type="email"
-                required
+                type="text"
                 placeholder="Email adresa"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={errors.email ? 'border-red-500' : ''}
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
             <div>
               <Label htmlFor="password">Lozinka</Label>
@@ -87,19 +105,22 @@ function AdminLoginContent() {
                 id="password"
                 name="password"
                 type="password"
-                required
                 placeholder="Lozinka"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className={errors.password ? 'border-red-500' : ''}
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
           </div>
 
-          {error && (
+          {generalError && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Greška</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{generalError}</AlertDescription>
             </Alert>
           )}
 
