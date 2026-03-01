@@ -5,6 +5,11 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 function AdminLoginContent() {
   const [email, setEmail] = useState('');
@@ -52,39 +57,37 @@ function AdminLoginContent() {
           </p>
         </div>
         {registered && (
-          <div className="rounded-md bg-green-50 dark:bg-green-900 p-4">
-            <p className="text-sm font-medium text-green-800 dark:text-green-200">
-              Registracija uspešna! Molimo vas prijavite se.
-            </p>
-          </div>
+          <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
+            <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <AlertTitle className="text-green-800 dark:text-green-200">
+              Registracija uspešna
+            </AlertTitle>
+            <AlertDescription className="text-green-700 dark:text-green-300">
+              Molimo vas prijavite se sa vašim nalogom.
+            </AlertDescription>
+          </Alert>
         )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
+          <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email adresa
-              </label>
-              <input
+              <Label htmlFor="email">Email adresa</Label>
+              <Input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-red-600"
                 placeholder="Email adresa"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Lozinka
-              </label>
-              <input
+              <Label htmlFor="password">Lozinka</Label>
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-red-600"
                 placeholder="Lozinka"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -93,17 +96,16 @@ function AdminLoginContent() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Greška</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-red-600 py-2 px-3 text-sm font-semibold text-white hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            >
-              Admin Prijava
-            </button>
-          </div>
+          <Button type="submit" className="w-full" size="lg">
+            Admin Prijava
+          </Button>
         </form>
       </div>
     </div>

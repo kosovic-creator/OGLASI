@@ -3,6 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,16 +92,13 @@ export default function RegisterPage() {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
+          <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium mb-2">
-                Ime (opciono)
-              </label>
-              <input
+              <Label htmlFor="name">Ime (opciono)</Label>
+              <Input
                 id="name"
                 name="name"
                 type="text"
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 placeholder="Svoje ime"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -104,15 +106,12 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email adresa
-              </label>
-              <input
+              <Label htmlFor="email">Email adresa</Label>
+              <Input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 placeholder="Email adresa"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -120,15 +119,12 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Lozinka
-              </label>
-              <input
+              <Label htmlFor="password">Lozinka</Label>
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 placeholder="Lozinka (min. 6 karaktera)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -136,18 +132,12 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium mb-2"
-              >
-                Potvrdite lozinku
-              </label>
-              <input
+              <Label htmlFor="confirmPassword">Potvrdite lozinku</Label>
+              <Input
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 required
-                className="relative block w-full rounded-md border-0 py-2 px-3 text-gray-900 dark:text-white dark:bg-gray-800 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                 placeholder="Potvrdite lozinku"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -156,18 +146,21 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Greška</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
-            >
-              {loading ? 'Registracija u tijeku...' : 'Registracija'}
-            </button>
-          </div>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full"
+            size="lg"
+          >
+            {loading ? 'Registracija u tijeku...' : 'Registracija'}
+          </Button>
         </form>
       </div>
     </div>
