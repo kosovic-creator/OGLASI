@@ -20,7 +20,24 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ],
+      "@oglasi/database": [
+        "../../packages/database/index.ts"
+      ],
+      "@oglasi/auth": [
+        "../../packages/auth/index.ts"
+      ],
+      "@oglasi/server-actions": [
+        "../../packages/server-actions/index.ts"
+      ],
+      "@oglasi/validation": [
+        "../../packages/validation/index.ts"
+      ],
+      "@oglasi/*": [
+        "../../packages/*/index.ts"
+      ]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
