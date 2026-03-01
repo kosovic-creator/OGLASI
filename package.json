@@ -1,0 +1,27 @@
+{
+  "name": "oglasi-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "db:migrate": "npm run db:migrate --workspace=packages/database",
+    "db:deploy": "npm run db:deploy --workspace=packages/database",
+    "db:reset": "npm run db:reset --workspace=packages/database",
+    "dev:klient": "npm run dev --workspace=apps/oglasi-klient",
+    "dev:admin": "npm run dev --workspace=apps/oglasi-admin",
+    "dev": "npm run dev --workspace=apps/oglasi-klient & npm run dev --workspace=apps/oglasi-admin",
+    "build:klient": "npm run build --workspace=apps/oglasi-klient",
+    "build:admin": "npm run build --workspace=apps/oglasi-admin",
+    "build": "npm run build --workspace=apps/oglasi-klient && npm run build --workspace=apps/oglasi-admin",
+    "db:generate": "npm run db:generate --workspace=packages/database",
+    "db:push": "npm run db:push --workspace=packages/database",
+    "db:studio": "npm run db:studio --workspace=packages/database"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  }
+}
