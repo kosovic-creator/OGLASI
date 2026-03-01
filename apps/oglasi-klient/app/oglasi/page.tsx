@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 import { Plus, Eye } from 'lucide-react'
+import { DeleteAdButton } from '@/components/delete-ad-button'
 
 export default async function OglasiPage() {
   const ads = await getAds({ take: 50 }) as any[]
@@ -118,11 +119,14 @@ export default async function OglasiPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Link href={`/oglasi/${ad.id}`}>
-                          <Button variant="outline" size="sm">
-                            Detalji
-                          </Button>
-                        </Link>
+                        <div className="flex justify-end gap-2">
+                          <Link href={`/oglasi/${ad.id}`}>
+                            <Button variant="outline" size="sm">
+                              Detalji
+                            </Button>
+                          </Link>
+                          <DeleteAdButton adId={ad.id} />
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
