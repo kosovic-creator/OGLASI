@@ -1,19 +1,13 @@
 'use server'
 
-import { prisma, type Contact } from '@oglasi/database'
-
-export interface CreateContactInput {
-  name: string
-  email: string
-  phone?: string
-  message: string
-}
+import { prisma } from '@oglasi/database'
+import type { CreateContactInput } from '@oglasi/validation'
 
 export async function createContact(
   adId: string,
   userId: string | null,
   data: CreateContactInput
-): Promise<Contact> {
+) {
   return await prisma.contact.create({
     data: {
       ...data,

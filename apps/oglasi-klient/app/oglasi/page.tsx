@@ -16,7 +16,7 @@ import Link from 'next/link'
 import { Plus, Eye } from 'lucide-react'
 
 export default async function OglasiPage() {
-  const ads = await getAds({ take: 50 })
+  const ads = await getAds({ take: 50 }) as any[]
 
   return (
     <div className="container mx-auto py-8 px-4">

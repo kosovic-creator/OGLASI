@@ -1,21 +1,12 @@
 'use server'
 
 import { prisma } from '@oglasi/database'
-import type { Ad, AdCategory, AdType } from '@oglasi/database'
-
-export interface CreateAdInput {
-  title: string
-  description: string
-  price: number
-  category: AdCategory
-  type: AdType
-  locationId?: string
-}
+import type { CreateAdInput, UpdateAdInput } from '@oglasi/validation'
 
 export async function createAd(
   userId: string,
   data: CreateAdInput
-): Promise<Ad> {
+) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
   }
@@ -28,13 +19,11 @@ export async function createAd(
   })
 }
 
-export interface UpdateAdInput extends Partial<CreateAdInput> {}
-
 export async function updateAd(
   userId: string,
   adId: string,
   data: UpdateAdInput
-): Promise<Ad> {
+) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
   }
@@ -54,7 +43,7 @@ export async function updateAd(
   })
 }
 
-export async function deleteAd(userId: string, adId: string): Promise<Ad> {
+export async function deleteAd(userId: string, adId: string) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
   }
@@ -98,8 +87,8 @@ export async function getAdById(adId: string) {
 
 export async function getAds(
   filter?: {
-    category?: AdCategory
-    type?: AdType
+    category?: string
+    type?: string
     city?: string
     minPrice?: number
     maxPrice?: number
@@ -112,8 +101,8 @@ export async function getAds(
 
   return await prisma.ad.findMany({
     where: {
-      ...(where.category && { category: where.category }),
-      ...(where.type && { type: where.type }),
+      ...(where.category && { category: where.category as any }),
+      ...(where.type && { type: where.type as any }),
       ...(where.featured !== undefined && { featured: where.featured }),
       ...(where.minPrice || where.maxPrice) && {
         price: {

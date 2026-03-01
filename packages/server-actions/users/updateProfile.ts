@@ -1,7 +1,6 @@
 'use server'
 
 import { prisma } from '@oglasi/database'
-import type { User } from '@oglasi/database'
 
 export interface UpdateProfileInput {
   name?: string
@@ -11,7 +10,7 @@ export interface UpdateProfileInput {
 export async function updateProfile(
   userId: string,
   data: UpdateProfileInput
-): Promise<User> {
+) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
   }

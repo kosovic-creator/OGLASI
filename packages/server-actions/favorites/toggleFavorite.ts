@@ -1,12 +1,11 @@
 'use server'
 
 import { prisma } from '@oglasi/database'
-import type { Favorite } from '@oglasi/database'
 
 export async function toggleFavorite(
   userId: string,
   adId: string
-): Promise<{ isFavorite: boolean; favorite?: Favorite }> {
+) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
   }
