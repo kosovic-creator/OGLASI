@@ -223,7 +223,7 @@ model Vehicle {
 
 model Location {
   id          String    @id @default(cuid())
-  country     String    @default("Bosna i Hercegovina")
+  country     String    @default("Crna Gora")
   city        String
   municipality String?
   address     String?

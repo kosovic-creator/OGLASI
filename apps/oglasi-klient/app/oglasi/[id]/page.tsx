@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice } from '@/lib/utils'
 import { ContactForm } from '@/components/ContactForm'
+import { LocationMapDisplay } from '@/components/LocationMapDisplay'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Eye, MapPin, Phone, Mail, User, Calendar } from 'lucide-react'
@@ -46,38 +47,33 @@ export default async function AdDetailPage({
           {/* Header */}
           <Card>
             <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <div className="flex gap-2">
-                    <Badge>{ad.category}</Badge>
-                    <Badge variant={ad.type === 'PRODAJA' ? 'default' : 'secondary'}>
-                      {ad.type}
-                    </Badge>
-                    <Badge
-                      variant={
-                        ad.status === 'AKTIVNO'
-                          ? 'default'
-                          : ad.status === 'PRODATO'
+              <div className="flex flex-col">
+                <div className="flex gap-2 mb-4">
+                  <Badge>{ad.category}</Badge>
+                  <Badge variant={ad.type === 'PRODAJA' ? 'default' : 'secondary'}>
+                    {ad.type}
+                  </Badge>
+                  <Badge
+                    variant={
+                      ad.status === 'AKTIVNO'
+                        ? 'default'
+                        : ad.status === 'PRODATO'
                           ? 'destructive'
                           : 'secondary'
-                      }
-                    >
-                      {ad.status}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-3xl">{ad.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-2 text-lg">
-                    <MapPin className="h-4 w-4" />
-                    {ad.location?.city || 'Lokacija nije navedena'}
-                  </CardDescription>
+                    }
+                  >
+                    {ad.status}
+                  </Badge>
                 </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold text-blue-600">{formatPrice(ad.price)}</p>
-                  <p className="text-sm text-muted-foreground flex items-center gap-1 mt-2">
-                    <Eye className="h-4 w-4" />
-                    {ad.views} pregleda
-                  </p>
-                </div>
+                <CardTitle className="text-3xl">{ad.title}</CardTitle>
+                <CardDescription className="flex items-center gap-2 text-lg">
+                  <MapPin className="h-4 w-4" />
+                  {ad.location?.city || 'Lokacija nije navedena'}
+                </CardDescription>
+                <p className="text-sm text-muted-foreground flex items-center gap-1 mt-3">
+                  <Eye className="h-4 w-4" />
+                  {ad.views} pregleda
+                </p>
               </div>
             </CardHeader>
           </Card>
@@ -88,7 +84,7 @@ export default async function AdDetailPage({
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {ad.images.map((img, idx) => (
-                    <div key={img.id} className={idx === 0 ? 'md:col-span-2' : ''}>
+                    <div key={img.id} className={`relative ${idx === 0 ? 'md:col-span-2' : ''}`}>
                       <Image
                         src={img.url}
                         alt={img.alt || ad.title}
@@ -96,6 +92,11 @@ export default async function AdDetailPage({
                         height={600}
                         className="rounded-lg object-cover w-full h-auto"
                       />
+                      {idx === 0 && (
+                        <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-2 rounded-lg font-bold text-lg shadow-lg whitespace-nowrap">
+                          {formatPrice(ad.price)}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -225,6 +226,46 @@ export default async function AdDetailPage({
                     <p className="text-sm text-muted-foreground">Stanje</p>
                     <p className="font-medium">{ad.whiteGoods.condition}</p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Location Map */}
+          {ad.location?.latitude && ad.location?.longitude && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Lokacija
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <LocationMapDisplay
+                  latitude={Number(ad.location.latitude)}
+                  longitude={Number(ad.location.longitude)}
+                  city={ad.location.city}
+                />
+                <div className="space-y-2 text-sm">
+                  {ad.location.address && (
+                    <div>
+                      <p className="text-muted-foreground">Adresa</p>
+                      <p className="font-medium">{ad.location.address}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-muted-foreground">Grad</p>
+                    <p className="font-medium">
+                      {ad.location.city}
+                      {ad.location.municipality && `, ${ad.location.municipality}`}
+                    </p>
+                  </div>
+                  {ad.location.postalCode && (
+                    <div>
+                      <p className="text-muted-foreground">Poštanski broj</p>
+                      <p className="font-medium">{ad.location.postalCode}</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

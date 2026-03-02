@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from '@oglasi/database'
+import { prisma, Prisma } from '@oglasi/database'
 import type { CreateAdInput } from '@oglasi/validation'
 
 type CreateAdWithDetailsInput = CreateAdInput & {
@@ -10,6 +10,8 @@ type CreateAdWithDetailsInput = CreateAdInput & {
     address?: string
     postalCode?: string
     country?: string
+        latitude?: number
+        longitude?: number
   }
   realEstate?: {
     realEstateType: 'STAN' | 'KUCA' | 'POSLOVNI_PROSTOR'
@@ -55,18 +57,22 @@ export async function createAdWithDetails(
           address: location.address,
           postalCode: location.postalCode,
           country: location.country ?? 'Bosna i Hercegovina',
+              latitude: location.latitude ? new Prisma.Decimal(location.latitude) : undefined,
+              longitude: location.longitude ? new Prisma.Decimal(location.longitude) : undefined,
         },
       })
 
       locationId = createdLocation.id
     }
 
-    const ad = await tx.ad.create({
-      data: {
-        ...adData,
-        userId,
-        ...(locationId && { locationId }),
-      },
+      const createAdData = {
+          ...adData,
+          userId,
+          ...(locationId ? { locationId } : {}),
+      }
+
+      const ad = await tx.ad.create({
+          data: createAdData as any,
     })
 
     if (ad.category === 'NEKRETNINE' && realEstate) {

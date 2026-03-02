@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Alert } from '@/components/ui/alert'
+import { LocationMapPicker } from '@/components/LocationMapPicker'
 
 const createAdWithDetailsSchema = createAdSchema
   .extend({
@@ -20,6 +21,8 @@ const createAdWithDetailsSchema = createAdSchema
     municipality: z.string().optional(),
     address: z.string().optional(),
     postalCode: z.string().optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
     imageUrls: z.string().optional(),
     realEstateType: z.enum(['STAN', 'KUCA', 'POSLOVNI_PROSTOR']).optional(),
     surface: z.coerce.number().positive('Površina mora biti pozitivan broj').optional(),
@@ -88,6 +91,8 @@ export default function CreateAdPage() {
       municipality: '',
       address: '',
       postalCode: '',
+      latitude: undefined,
+      longitude: undefined,
       imageUrls: '',
     },
   })
@@ -183,6 +188,14 @@ export default function CreateAdPage() {
     }
   }
 
+  function handleLocationSelect(lat: number, lng: number, address?: string) {
+    setValue('latitude', lat, { shouldDirty: true, shouldValidate: true })
+    setValue('longitude', lng, { shouldDirty: true, shouldValidate: true })
+    if (address) {
+      setValue('address', address, { shouldDirty: true })
+    }
+  }
+
   async function onSubmit(data: CreateAdWithDetailsFormInput) {
     setLoading(true)
     setError('')
@@ -204,6 +217,8 @@ export default function CreateAdPage() {
           municipality: data.municipality || undefined,
           address: data.address || undefined,
           postalCode: data.postalCode || undefined,
+          latitude: data.latitude,
+          longitude: data.longitude,
         },
         realEstate:
           data.category === 'NEKRETNINE' && data.realEstateType && data.surface
@@ -350,6 +365,13 @@ export default function CreateAdPage() {
                 <Input id="postalCode" placeholder="71000" {...register('postalCode')} />
               </div>
             </div>
+
+            <LocationMapPicker
+              onLocationSelect={handleLocationSelect}
+              initialLat={getValues('latitude')}
+              initialLng={getValues('longitude')}
+              initialAddress={getValues('address')}
+            />
 
             {selectedCategory === 'NEKRETNINE' && (
               <div className="space-y-4 rounded-md border p-4">
