@@ -42,11 +42,11 @@ export function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6">
               <Link
-                href="/korisnici"
+                href="/kontakti"
                 className="flex items-center gap-2 text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 <Users className="h-4 w-4" />
-                Korisnici
+                Kontakti
               </Link>
               <Link
                 href="/oglasi"

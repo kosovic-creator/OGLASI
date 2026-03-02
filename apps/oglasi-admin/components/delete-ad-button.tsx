@@ -42,7 +42,7 @@ export function DeleteAdButton({ adId }: DeleteAdButtonProps) {
         <Button
           variant="destructive"
           size="sm"
-                className="h-8 px-3 font-medium"
+          className="h-8 px-3 font-medium"
           onClick={handleDelete}
           disabled={isLoading}
         >
@@ -51,7 +51,7 @@ export function DeleteAdButton({ adId }: DeleteAdButtonProps) {
         <Button
           variant="outline"
           size="sm"
-                className="h-8 px-3 font-medium"
+          className="h-8 px-3 font-medium"
           onClick={() => setShowConfirm(false)}
           disabled={isLoading}
         >
@@ -66,7 +66,7 @@ export function DeleteAdButton({ adId }: DeleteAdButtonProps) {
       variant="destructive"
       size="sm"
       onClick={() => setShowConfirm(true)}
-          className="h-8 px-3 gap-1.5 font-medium"
+      className="h-8 px-3 gap-1.5 font-medium"
     >
       <Trash2 className="h-4 w-4" />
       Obriši

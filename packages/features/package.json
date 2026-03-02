@@ -1,0 +1,23 @@
+{
+  "name": "@oglasi/features",
+  "version": "1.0.0",
+  "description": "Shared feature components for Oglasi applications",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./ads": "./dist/ads/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@oglasi/server-actions": "*",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "typescript": "^5.3.0"
+  }
+}

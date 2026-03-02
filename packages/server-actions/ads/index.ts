@@ -1,2 +1,2 @@
 export * from './createAd'
-export { deleteAd } from './createAd'
+export { deleteAd, updateAd } from './createAd'

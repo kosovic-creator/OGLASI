@@ -3,7 +3,7 @@
 ## 1. Kreiranje oglasa
 
 ```typescript
-// app/ads/create/page.tsx
+// apps/oglasi-klient/app/oglasi/dodaj/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -60,7 +60,7 @@ export default function CreateAdPage() {
 ## 2. Pregled oglasa sa detaljima
 
 ```typescript
-// app/ads/[id]/page.tsx
+// apps/oglasi-klient/app/oglasi/[id]/page.tsx
 import { getAdById, incrementAdViews } from '@oglasi/server-actions/ads'
 import { Card } from '@/components/ui/card'
 import { formatPrice } from '@/lib/utils'
@@ -117,7 +117,7 @@ export default async function AdDetailPage({
 ## 3. Omiljeni oglasi (client component)
 
 ```typescript
-// components/FavoriteButton.tsx
+// apps/oglasi-klient/components/FavoriteButton.tsx (primer custom komponente)
 'use client'
 
 import { useState } from 'react'
@@ -169,7 +169,7 @@ export function FavoriteButton({ adId }: { adId: string }) {
 ## 4. Kontakt forma za oglas
 
 ```typescript
-// components/ContactForm.tsx
+// apps/oglasi-klient/components/ContactForm.tsx (primer custom komponente)
 'use client'
 
 import { createContact } from '@oglasi/server-actions/contacts'
@@ -225,19 +225,21 @@ export function ContactForm({ adId }: { adId: string }) {
 ## 5. Admin panel - pregled kontakata
 
 ```typescript
-// app/admin/contacts/page.tsx
+// apps/oglasi-admin/app/kontakti/page.tsx
 import { getAdContacts } from '@oglasi/server-actions/contacts'
 import { getServerSession } from 'next-auth/next'
-import { redirectToLogin } from '@/lib/auth'
+import { authOptions } from '@oglasi/auth'
+import { redirect } from 'next/navigation'
+import { Card } from '@/components/ui/card'
 
 export default async function ContactsPage() {
-  const session = await getServerSession()
+  const session = await getServerSession(authOptions)
 
   if (!session?.user?.id || session.user.role !== 'ADMIN') {
-    redirectToLogin()
+    redirect('/login')
   }
 
-  const contacts = await getAdContacts(session.user.id)
+  const contacts = await getAdContacts(session!.user!.id)
 
   return (
     <div>
@@ -264,12 +266,11 @@ export default async function ContactsPage() {
 ## 6. Pretraga oglasa sa filterima
 
 ```typescript
-// components/AdSearch.tsx
+// packages/features/ads/AdSearch.tsx
 'use client'
 
 import { useState } from 'react'
 import { getAds } from '@oglasi/server-actions/ads'
-import { AdCard } from '@/components/AdCard'
 
 export function AdSearch() {
   const [ads, setAds] = useState([])
@@ -320,7 +321,7 @@ export function AdSearch() {
 
       <div className="grid grid-cols-3 gap-4 mt-8">
         {ads.map((ad) => (
-          <AdCard key={ad.id} ad={ad} />
+          <div key={ad.id}>{ad.title}</div>
         ))}
       </div>
     </div>
@@ -336,3 +337,4 @@ export function AdSearch() {
 - `userId` se prosleđuje kroz `session.user.id`
 - Server actions automatski provere vlasništvo nad resursima
 - Sve greške se bacaju kao `Error` sa porukom
+- Putanje u komentarima su usklađene sa monorepo strukturom `apps/...`; sekcije 3 i 4 su primeri custom komponenti koje možeš dodati po potrebi

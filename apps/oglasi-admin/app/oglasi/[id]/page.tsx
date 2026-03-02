@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPrice } from '@/lib/utils'
-import { ContactForm } from '@/components/ContactForm'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Eye, MapPin, Phone, Mail, User, Calendar } from 'lucide-react'
@@ -267,28 +266,14 @@ export default async function AdDetailPage({
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-4" asChild disabled={!ad.user.phone}>
-                <a href={ad.user.phone ? `tel:${ad.user.phone}` : undefined}>
-                  <Phone className="h-4 w-4 mr-2" />
-                  Pozovi
-                </a>
+              <Button className="w-full mt-4">
+                <Phone className="h-4 w-4 mr-2" />
+                Pozovi
               </Button>
-              <Button variant="outline" className="w-full" asChild disabled={!ad.user.phone}>
-                <a href={ad.user.phone ? `sms:${ad.user.phone}` : undefined}>
-                  <Mail className="h-4 w-4 mr-2" />
-                  Pošalji poruku
-                </a>
+              <Button variant="outline" className="w-full">
+                <Mail className="h-4 w-4 mr-2" />
+                Pošalji poruku
               </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Pošalji upit</CardTitle>
-              <CardDescription>Pošaljite poruku vlasniku oglasa</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ContactForm adId={ad.id} />
             </CardContent>
           </Card>
 

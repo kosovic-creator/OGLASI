@@ -140,6 +140,33 @@ export async function getAds(
   })
 }
 
+export async function getAdsForClient(
+  filter?: {
+    category?: string
+    type?: string
+    city?: string
+    minPrice?: number
+    maxPrice?: number
+    featured?: boolean
+    skip?: number
+    take?: number
+  }
+) {
+  const ads = await getAds(filter)
+
+  return ads.map((ad) => ({
+    ...ad,
+    price: ad.price.toString(),
+    location: ad.location
+      ? {
+        ...ad.location,
+        latitude: ad.location.latitude?.toString?.() ?? ad.location.latitude,
+        longitude: ad.location.longitude?.toString?.() ?? ad.location.longitude,
+      }
+      : ad.location,
+  }))
+}
+
 export async function getUserAds(userId: string, skip = 0, take = 10) {
   if (!userId) {
     throw new Error('Unauthorized - No user ID')
