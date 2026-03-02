@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-      "postinstall": "npm run db:generate --workspace=packages/database",
+    "postinstall": "npm run db:generate --workspace=packages/database",
     "db:migrate": "npm run db:migrate --workspace=packages/database",
     "db:deploy": "npm run db:deploy --workspace=packages/database",
     "db:reset": "npm run db:reset --workspace=packages/database",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
+    "@types/nodemailer": "^7.0.11",
     "concurrently": "^9.2.1",
     "typescript": "^5.3.3"
   }

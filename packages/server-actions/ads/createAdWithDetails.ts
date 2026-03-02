@@ -1,7 +1,95 @@
 'use server'
 
 import { prisma, Prisma } from '@oglasi/database'
+import nodemailer from 'nodemailer'
 import type { CreateAdInput } from '@oglasi/validation'
+
+type AdCreatedEmailPayload = {
+    to: string
+    name?: string | null
+    title: string
+    category: string
+    type: string
+    price: number
+    city?: string | null
+}
+
+async function sendAdCreatedEmail(payload: AdCreatedEmailPayload) {
+    const host = process.env.EMAIL_HOST
+    const port = process.env.EMAIL_PORT
+    const secureRaw = process.env.EMAIL_SECURE
+    const user = process.env.EMAIL_USER
+    const pass = process.env.EMAIL_PASSWORD
+    const from = process.env.EMAIL_FROM
+
+    if (!host || !port || !user || !pass || !from) {
+        console.warn('Email config nije potpuna. Preskačem potvrdu emailom za oglas.')
+        return
+    }
+
+    const secure = secureRaw === 'true'
+    const transporter = nodemailer.createTransport({
+        host,
+        port: Number(port),
+        secure,
+        auth: {
+            user,
+            pass,
+        },
+    })
+
+    const subject = 'Potvrda: Oglas je uspješno dodat'
+    const recipientName = payload.name?.trim() || 'Korisniče'
+    const price = payload.price.toLocaleString('sr-RS', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
+
+    const html = `
+    <div style="background:#f5f7fb;padding:24px;font-family:Arial,sans-serif;color:#111827;">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
+        <div style="background:#2563eb;color:#ffffff;padding:20px 24px;">
+          <h1 style="margin:0;font-size:20px;line-height:1.3;">Oglas je uspješno objavljen</h1>
+          <p style="margin:8px 0 0;font-size:14px;opacity:0.95;">Hvala što koristite Oglasi platformu.</p>
+        </div>
+        <div style="padding:24px;">
+          <p style="margin:0 0 12px;font-size:15px;">Zdravo, <strong>${recipientName}</strong> 👋</p>
+          <p style="margin:0 0 18px;font-size:14px;color:#374151;">Vaš oglas je uspješno dodat i sada je vidljiv na platformi.</p>
+
+          <div style="border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;background:#fafafa;">
+            <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#111827;">${payload.title}</p>
+            <p style="margin:0 0 4px;font-size:13px;color:#4b5563;"><strong>Kategorija:</strong> ${payload.category}</p>
+            <p style="margin:0 0 4px;font-size:13px;color:#4b5563;"><strong>Tip:</strong> ${payload.type}</p>
+            <p style="margin:0 0 4px;font-size:13px;color:#4b5563;"><strong>Cijena:</strong> ${price} EUR</p>
+            <p style="margin:0;font-size:13px;color:#4b5563;"><strong>Grad:</strong> ${payload.city || 'Nije navedeno'}</p>
+          </div>
+
+          <p style="margin:18px 0 0;font-size:13px;color:#6b7280;">Ako ovo niste vi dodali, kontaktirajte podršku.</p>
+        </div>
+      </div>
+    </div>
+  `
+
+    const text = `
+Zdravo ${recipientName},
+
+Vaš oglas je uspješno dodat.
+
+Naslov: ${payload.title}
+Kategorija: ${payload.category}
+Tip: ${payload.type}
+Cijena: ${price} EUR
+Grad: ${payload.city || 'Nije navedeno'}
+  `.trim()
+
+    await transporter.sendMail({
+        from,
+        to: payload.to,
+        subject,
+        html,
+        text,
+    })
+}
 
 type CreateAdWithDetailsInput = CreateAdInput & {
   location?: {
@@ -46,7 +134,7 @@ export async function createAdWithDetails(
 
   const { location, realEstate, images = [], ...adData } = data
 
-  return prisma.$transaction(async (tx) => {
+    const createdAd = await prisma.$transaction(async (tx) => {
     let locationId: string | undefined
 
     if (location?.city) {
@@ -98,6 +186,12 @@ export async function createAdWithDetails(
     return tx.ad.findUnique({
       where: { id: ad.id },
       include: {
+          user: {
+              select: {
+                  email: true,
+                  name: true,
+              },
+          },
         location: true,
         realEstate: true,
         images: {
@@ -106,6 +200,24 @@ export async function createAdWithDetails(
       },
     })
   })
+
+    if (createdAd?.user?.email) {
+        try {
+            await sendAdCreatedEmail({
+                to: createdAd.user.email,
+                name: createdAd.user.name,
+                title: createdAd.title,
+                category: createdAd.category,
+                type: createdAd.type,
+                price: Number(createdAd.price),
+                city: createdAd.location?.city,
+            })
+        } catch (error) {
+            console.error('Slanje email potvrde nije uspjelo:', error)
+        }
+    }
+
+    return createdAd
 }
 
 type UpdateAdWithDetailsInput = {
