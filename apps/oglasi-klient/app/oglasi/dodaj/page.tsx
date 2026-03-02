@@ -70,6 +70,7 @@ export default function CreateAdPage() {
   const [uploadingImages, setUploadingImages] = useState(false)
   const [uploadedCount, setUploadedCount] = useState(0)
   const [uploadError, setUploadError] = useState('')
+  const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null)
   const [error, setError] = useState('')
 
   const {
@@ -194,6 +195,35 @@ export default function CreateAdPage() {
     if (address) {
       setValue('address', address, { shouldDirty: true })
     }
+  }
+
+  function removeImageAtIndex(indexToRemove: number) {
+    const currentUrls = parseImageUrls(getValues('imageUrls') || '')
+    const nextUrls = currentUrls.filter((_, index) => index !== indexToRemove)
+    setValue('imageUrls', nextUrls.join('\n'), {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }
+
+  function moveImage(fromIndex: number, toIndex: number) {
+    if (fromIndex === toIndex) {
+      return
+    }
+
+    const currentUrls = parseImageUrls(getValues('imageUrls') || '')
+    if (fromIndex < 0 || toIndex < 0 || fromIndex >= currentUrls.length || toIndex >= currentUrls.length) {
+      return
+    }
+
+    const reorderedUrls = [...currentUrls]
+    const [movedItem] = reorderedUrls.splice(fromIndex, 1)
+    reorderedUrls.splice(toIndex, 0, movedItem)
+
+    setValue('imageUrls', reorderedUrls.join('\n'), {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
   }
 
   async function onSubmit(data: CreateAdWithDetailsFormInput) {
@@ -342,7 +372,7 @@ export default function CreateAdPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="city">Grad *</Label>
-                <Input id="city" placeholder="npr. Sarajevo" {...register('city')} />
+                <Input id="city" placeholder="npr. Podgorica" {...register('city')} />
                 {errors.city && (
                   <p className="text-sm text-red-500">{errors.city.message}</p>
                 )}
@@ -450,13 +480,37 @@ export default function CreateAdPage() {
               {previewImageUrls.length > 0 && (
                 <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-3">
                   {previewImageUrls.map((imageUrl, index) => (
-                    <div key={`${imageUrl}-${index}`} className="overflow-hidden rounded-md border bg-muted">
+                    <div
+                      key={`${imageUrl}-${index}`}
+                      className="overflow-hidden rounded-md border bg-muted"
+                      draggable
+                      onDragStart={() => setDraggedImageIndex(index)}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={() => {
+                        if (draggedImageIndex !== null) {
+                          moveImage(draggedImageIndex, index)
+                        }
+                        setDraggedImageIndex(null)
+                      }}
+                      onDragEnd={() => setDraggedImageIndex(null)}
+                    >
                       <img
                         src={imageUrl}
                         alt={`Pregled slike ${index + 1}`}
                         className="h-28 w-full object-cover"
                         loading="lazy"
                       />
+                      <div className="p-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => removeImageAtIndex(index)}
+                        >
+                          Obriši sliku
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
