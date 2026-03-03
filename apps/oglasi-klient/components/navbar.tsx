@@ -2,23 +2,31 @@
 
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Home,
-  ListFilter,
-  PlusCircle,
   LogOut,
   User,
   Menu,
   X
 } from 'lucide-react';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const user = session?.user;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const isActivePath = (href: string) => {
+    if (href === '/oglasi') {
+      return pathname === '/oglasi';
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
@@ -39,21 +47,38 @@ export function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6">
               <Link
-                href="/oglasi"
-                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                href="/nekretnine"
+                className={cn(
+                  'text-sm border-b-2 pb-1 transition-colors',
+                  isActivePath('/nekretnine')
+                    ? 'text-blue-600 border-blue-600 font-semibold'
+                    : 'text-gray-700 border-transparent hover:text-blue-600 hover:border-blue-200 font-medium'
+                )}
               >
-                <ListFilter className="h-4 w-4" />
-                Svi Oglasi
+                Nekretnine
               </Link>
-              {user && (
-                <Link
-                  href="/oglasi/dodaj"
-                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  <PlusCircle className="h-4 w-4" />
-                  Dodaj Oglas
-                </Link>
-              )}
+              <Link
+                href="/bijela-tehnika"
+                className={cn(
+                  'text-sm border-b-2 pb-1 transition-colors',
+                  isActivePath('/bijela-tehnika')
+                    ? 'text-blue-600 border-blue-600 font-semibold'
+                    : 'text-gray-700 border-transparent hover:text-blue-600 hover:border-blue-200 font-medium'
+                )}
+              >
+                Bijela tehnika
+              </Link>
+              <Link
+                href="/auti"
+                className={cn(
+                  'text-sm border-b-2 pb-1 transition-colors',
+                  isActivePath('/auti')
+                    ? 'text-blue-600 border-blue-600 font-semibold'
+                    : 'text-gray-700 border-transparent hover:text-blue-600 hover:border-blue-200 font-medium'
+                )}
+              >
+                Auti
+              </Link>
             </div>
           </div>
 
@@ -121,20 +146,34 @@ export function Navbar() {
         {mobileMenuOpen && user && (
           <div className="md:hidden border-t py-4 space-y-3">
             <Link
-              href="/oglasi"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              href="/nekretnine"
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+                isActivePath('/nekretnine') ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
+              )}
               onClick={() => setMobileMenuOpen(false)}
             >
-              <ListFilter className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium">Svi Oglasi</span>
+              <span className="text-sm font-medium">Nekretnine</span>
             </Link>
             <Link
-              href="/oglasi/dodaj"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              href="/bijela-tehnika"
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+                isActivePath('/bijela-tehnika') ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
+              )}
               onClick={() => setMobileMenuOpen(false)}
             >
-              <PlusCircle className="h-4 w-4 text-gray-600" />
-              <span className="text-sm font-medium">Dodaj Oglas</span>
+              <span className="text-sm font-medium">Bijela tehnika</span>
+            </Link>
+            <Link
+              href="/auti"
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+                isActivePath('/auti') ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
+              )}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span className="text-sm font-medium">Auti</span>
             </Link>
             <div className="border-t pt-3 mt-3">
               <div className="flex items-center gap-3 px-3 py-2 mb-2">

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { updateAdSchema } from '@oglasi/validation'
 import { z } from 'zod'
+import Image from 'next/image'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -472,12 +473,15 @@ export default function EditAdPage() {
                       }}
                       onDragEnd={() => setDraggedImageIndex(null)}
                     >
-                      <img
-                        src={imageUrl}
-                        alt={`Pregled slike ${index + 1}`}
-                        className="h-28 w-full object-cover"
-                        loading="lazy"
-                      />
+                      <div className="relative h-28 w-full">
+                        <Image
+                          src={imageUrl}
+                          alt={`Pregled slike ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
                       <div className="p-2">
                         <Button
                           type="button"

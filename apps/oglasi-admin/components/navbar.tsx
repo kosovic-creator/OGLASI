@@ -7,7 +7,6 @@ import Link from 'next/link';
 import {
   Shield,
   Users,
-  FileText,
   LogOut,
   Menu,
   X,
@@ -47,13 +46,6 @@ export function Navbar() {
               >
                 <Users className="h-4 w-4" />
                 Kontakti
-              </Link>
-              <Link
-                href="/oglasi"
-                className="flex items-center gap-2 text-sm font-medium text-white/90 hover:text-white transition-colors"
-              >
-                <FileText className="h-4 w-4" />
-                Oglasi
               </Link>
               <Link
                 href="/postavke"
@@ -128,20 +120,12 @@ export function Navbar() {
         {mobileMenuOpen && user && (
           <div className="md:hidden border-t border-white/20 py-4 space-y-3">
             <Link
-              href="/korisnici"
+              href="/kontakti"
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Users className="h-4 w-4" />
-              <span className="text-sm font-medium">Korisnici</span>
-            </Link>
-            <Link
-              href="/oglasi"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <FileText className="h-4 w-4" />
-              <span className="text-sm font-medium">Oglasi</span>
+              <span className="text-sm font-medium">Kontakti</span>
             </Link>
             <Link
               href="/postavke"

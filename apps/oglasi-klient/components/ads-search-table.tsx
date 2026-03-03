@@ -30,10 +30,15 @@ type AdRow = {
   } | null
 }
 
-export function AdsSearchTable() {
+interface AdsSearchTableProps {
+  category?: string
+}
+
+export function AdsSearchTable({ category }: AdsSearchTableProps) {
   return (
     <AdSearch
       take={50}
+      category={category}
       renderResults={(ads) => {
         const rows = ads as AdRow[]
 

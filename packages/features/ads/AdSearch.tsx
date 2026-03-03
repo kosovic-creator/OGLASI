@@ -19,6 +19,7 @@ type SearchAd = {
 interface AdSearchProps {
   take?: number
   loadInitial?: boolean
+  category?: string
   submitLabel?: string
   loadingLabel?: string
   resetLabel?: string
@@ -29,6 +30,7 @@ interface AdSearchProps {
 export function AdSearch({
   take = 20,
   loadInitial = true,
+  category,
   submitLabel = 'Pretraži',
   loadingLabel = 'Pretraga...',
   resetLabel = 'Očisti filtere',
@@ -49,7 +51,10 @@ export function AdSearch({
     async function loadInitialAds() {
       setLoading(true)
       try {
-        const initialAds = (await getAdsForClient({ take })) as unknown as SearchAd[]
+        const initialAds = (await getAdsForClient({
+          take,
+          category: category || undefined,
+        })) as unknown as SearchAd[]
         if (isMounted) {
           setAds(initialAds)
           setSearched(true)
@@ -66,7 +71,7 @@ export function AdSearch({
     return () => {
       isMounted = false
     }
-  }, [loadInitial, take])
+  }, [loadInitial, take, category])
 
   async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -105,7 +110,10 @@ export function AdSearch({
 
     setLoading(true)
     try {
-      const initialAds = (await getAdsForClient({ take })) as unknown as SearchAd[]
+      const initialAds = (await getAdsForClient({
+        take,
+        category: category || undefined,
+      })) as unknown as SearchAd[]
       setAds(initialAds)
       setSearched(true)
     } finally {
