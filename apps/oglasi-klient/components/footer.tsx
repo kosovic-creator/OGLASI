@@ -28,7 +28,7 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {/* About Section */}
             <div>
-              <h3 className="text-lg font-bold text-white mb-4">Oglasi.rs</h3>
+              <h3 className="text-lg font-bold text-white mb-4">Oglasi.me</h3>
               <p className="text-slate-300 text-sm mb-4">
                 Vodeća platforma za kupovinu i prodaju automobila, nekretnina i bele tehnike u Srbiji.
               </p>
