@@ -32,8 +32,8 @@ export default function AddVehiclePage() {
   const [municipality, setMunicipality] = useState('')
   const [address, setAddress] = useState('')
   const [postalCode, setPostalCode] = useState('')
-  const [latitude, setLatitude] = useState<number | undefined>()
-  const [longitude, setLongitude] = useState<number | undefined>()
+  const [latitude, setLatitude] = useState<number>(42.448415)
+  const [longitude, setLongitude] = useState<number>(19.257145)
 
   // Parse image URLs from string
   function parseImageUrls(value: string): string[] {
