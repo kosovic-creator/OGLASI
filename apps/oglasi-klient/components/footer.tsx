@@ -30,7 +30,7 @@ export function Footer() {
             <div>
               <h3 className="text-lg font-bold text-white mb-4">Oglasi.me</h3>
               <p className="text-slate-300 text-sm mb-4">
-                Vodeća platforma za kupovinu i prodaju automobila, nekretnina i bele tehnike u Srbiji.
+                Vodeća platforma za kupovinu i prodaju automobila, nekretnina i bele tehnike u Crnoj Gori.
               </p>
               <div className="flex space-x-4">
                 <a href="#" className="text-slate-400 hover:text-white transition-colors">
