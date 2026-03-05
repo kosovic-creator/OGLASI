@@ -7,6 +7,9 @@ import { Footer } from '@/components/footer';
 export const metadata: Metadata = {
   title: 'Oglasi Admin',
   description: 'Admin aplikacija za oglase',
+    icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
