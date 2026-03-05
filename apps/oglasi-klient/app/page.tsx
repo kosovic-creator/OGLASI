@@ -21,7 +21,7 @@ export default async function Home() {
       title: 'Nekretnine',
       description: 'Kuće, stanovi, poslovni prostori',
       icon: HomeIcon,
-      href: '/oglasi/nekretnine',
+      href: '/nekretnine',
       color: 'bg-blue-50 dark:bg-blue-950',
     },
     {
@@ -29,7 +29,7 @@ export default async function Home() {
       title: 'Bijela Tehnika',
       description: 'Frižideri, pećnice, perilice...',
       icon: Zap,
-      href: '/oglasi/bijela-tehnika',
+      href: '/bijela-tehnika',
       color: 'bg-gray-50 dark:bg-gray-950',
     },
     {
@@ -37,7 +37,7 @@ export default async function Home() {
       title: 'Automobili',
       description: 'Vozila, automobili, motocikli',
       icon: Car,
-      href: '/oglasi/auti',
+      href: '/auti',
       color: 'bg-orange-50 dark:bg-orange-950',
     },
   ];
