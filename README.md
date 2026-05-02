@@ -17,7 +17,7 @@ oglasi/
 │   ├── database/         # Prisma schema i DB klijent
 │   └── auth/            # NextAuth konfiguracija
 └── package.json
-```
+```‚~
 
 ## 🚀 Početak
 
