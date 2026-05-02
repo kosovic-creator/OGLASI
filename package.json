@@ -1,0 +1,32 @@
+{
+  "name": "oglasi-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "node -e \"const { execSync } = require('child_process'); try { execSync('npm --workspace @oglasi/database run db:generate', { stdio: 'inherit' }); } catch (_) { process.exit(0); }\"",
+    "db:migrate": "npm --workspace @oglasi/database run db:migrate",
+    "db:deploy": "npm --workspace @oglasi/database run db:deploy",
+    "db:reset": "npm --workspace @oglasi/database run db:reset",
+    "dev:klient": "npm --workspace oglasi-klient run dev",
+    "dev:admin": "npm --workspace oglasi-admin run dev",
+    "dev": "concurrently \"npm --workspace oglasi-klient run dev\" \"npm --workspace oglasi-admin run dev\"",
+    "build:klient": "npm --workspace oglasi-klient run build",
+    "build:admin": "npm --workspace oglasi-admin run build",
+    "build:all": "npm --workspace oglasi-klient run build && npm --workspace oglasi-admin run build",
+    "build:vercel": "node -e \"const { execSync } = require('child_process'); const url = ((process.env.VERCEL_PROJECT_PRODUCTION_URL || '') + (process.env.VERCEL_URL || '')).toLowerCase(); try { execSync('npm --workspace @oglasi/database run db:generate', { stdio: 'inherit' }); } catch (_) {} if (url.includes('admin')) { execSync('npm --workspace oglasi-admin run build', { stdio: 'inherit' }); } else { execSync('npm --workspace oglasi-klient run build', { stdio: 'inherit' }); }\"",
+    "build": "node -e \"const { execSync } = require('child_process'); if (process.env.VERCEL === '1') { execSync('npm run build:vercel', { stdio: 'inherit' }); } else { try { execSync('npm --workspace @oglasi/database run db:generate', { stdio: 'inherit' }); } catch (_) {} execSync('npm run build:all', { stdio: 'inherit' }); }\"",
+    "db:generate": "npm --workspace @oglasi/database run db:generate",
+    "db:push": "npm --workspace @oglasi/database run db:push",
+    "db:studio": "npm --workspace @oglasi/database run db:studio"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/nodemailer": "^7.0.11",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.3.3"
+  }
+}
